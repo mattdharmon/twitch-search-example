@@ -1,9 +1,11 @@
+const { join } = require('path')
+
 module.exports = {
   /*
   ** Headers of the page
   */
   head: {
-    title: 'starter',
+    title: 'Twitch Search Sample',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -23,7 +25,7 @@ module.exports = {
   build: {
     vendor: [
       'axios',
-      'vue-material'
+      'vuetify'
     ],
     /*
     ** Run ESLINT on save
@@ -41,6 +43,9 @@ module.exports = {
   },
   plugins: [
     '~plugins/axios',
-    '~plugins/vue-material'
+    '~plugins/vuetify'
+  ],
+  css: [
+    { src: join(__dirname, 'css/app.styl'), lang: 'styl' }
   ]
 }
