@@ -12,13 +12,22 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' }
     ]
   },
   /*
   ** Customize the progress-bar color
   */
   loading: { color: '#3B8070' },
+  css: [
+    { src: join(__dirname, 'css/app.styl'), lang: 'styl' }
+  ],
+  plugins: [
+    { src:'~plugins/axios', injectAs: 'axios' },
+    '~plugins/vuetify'
+  ],
   /*
   ** Build configuration
   */
@@ -41,11 +50,8 @@ module.exports = {
       }
     }
   },
-  plugins: [
-    '~plugins/axios',
-    '~plugins/vuetify'
-  ],
-  css: [
-    { src: join(__dirname, 'css/app.styl'), lang: 'styl' }
-  ]
+  env: {
+    baseUrl: 'https://api.twitch.tv/kraken',
+    clientId: 'your-client-id'
+  },
 }
