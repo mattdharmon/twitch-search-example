@@ -21,7 +21,10 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['axios'],
+    vendor: [
+      'axios',
+      'vue-material'
+    ],
     /*
     ** Run ESLINT on save
     */
@@ -37,6 +40,7 @@ module.exports = {
     }
   },
   plugins: [
-    '~plugins/axios'
+    '~plugins/axios',
+    '~plugins/vue-material'
   ]
 }
