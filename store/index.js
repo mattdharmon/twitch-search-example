@@ -6,13 +6,14 @@ export const mutations = {
 
 export const actions = {
   // Set up a global search.
-  async search ({ commit, dispatch }, term) {
-    commit('search/setTerm', term)
-    await dispatch('channel/search', term)
+  async search ({ commit, dispatch }, search) {
+    commit('search/setSearch', search)
+    await dispatch('channel/search', search)
   },
+
   // Set up a global reset function.
   resetSearchResults ({ commit, dispatch }) {
-    commit('search/setTerm', '')
+    commit('search/setSearch', { })
     dispatch('channel/clear')
   }
 }

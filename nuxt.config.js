@@ -52,6 +52,6 @@ module.exports = {
   },
   env: {
     baseUrl: 'https://api.twitch.tv/kraken',
-    clientId: 'your-client-id'
+    clientId: 'gvf6iti0mwn7on4ogizrjyu8fccfyu'
   },
 }

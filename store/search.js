@@ -1,9 +1,13 @@
 export const state = {
-  term: ''
+  query: '',
+  limit: 10,
+  offset: 0
 }
 
 export const mutations = {
-  setTerm (state, term) {
-    state.term = term
+  setSearch (state, search) {
+    state.query = search.query || ''
+    state.limit = search.limit || 10
+    state.offset = search.offset || 0
   }
 }

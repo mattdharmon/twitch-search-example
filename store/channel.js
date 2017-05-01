@@ -1,10 +1,14 @@
 import axios from '~plugins/axios'
 
 export const state = {
-  searchTerm: '',
+  search: {
+    query: '',
+    limit: 10,
+    offset: 0
+  },
   list: [],
   total: 0,
-  links: {}
+  page: 1
 }
 
 export const mutations = {
@@ -14,28 +18,40 @@ export const mutations = {
   setTotal (state, total) {
     state.total = total
   },
-  setSearchTerm (state, term) {
-    state.searchTerm = term
+  setSearch (state, search) {
+    state.search.query = search.query || ''
+    state.search.limit = parseInt(search.limit) || 10
+    state.search.offset = parseInt(search.offset) || 0
   },
-  setLinks (state, links) {
-    state.links = links
+  setPage (state, page) {
+    state.page = page
   }
 }
 
 export const actions = {
-  async search ({ commit, state }, term) {
-    // Prevent double searches.
-    if (state.searchTerm === term) {
+  async search ({ commit, state }, search) {
+    if (search === state.search) {
       return
     }
-    // Save the searchTerm for later
-    commit('setSearchTerm', term)
+
+    if (!search.query) {
+      search = {
+        query: '',
+        limit: 10,
+        offset: 0
+      }
+      commit('setTotal', 0)
+      commit('setPage', 1)
+      commit('setSearch', search)
+      return
+    }
+
+    // Update the search state.
+    commit('setSearch', search)
 
     // Build the options for axios to communicate.
     const options = {
-      params: {
-        query: term
-      }
+      params: { ...state.search }
     }
 
     // Get all the channels
@@ -44,12 +60,17 @@ export const actions = {
     // Update the state.
     commit('setList', channels.data.channels)
     commit('setTotal', channels.data._total)
-    commit('setLinks', channels.data._links)
+    commit('setPage', (state.search.offset / state.search.limit) + 1)
   },
   clear ({ commit }) {
     commit('setList', [])
     commit('setTotal', 0)
-    commit('setLinks', {})
+    commit('setSearch', {})
+  },
+  setPage ({ commit, dispatch, state }, page) {
+    const offset = (state.search.limit * (parseInt(page) - 1))
+    commit('setSearch', { ...state.search, offset: offset })
+    commit('setPage', page)
   }
 }
 
@@ -57,10 +78,16 @@ export const getters = {
   list (state) {
     return state.list
   },
-  nextLink (state) {
-    return state.links.next
+  total (state) {
+    return state.total
   },
   hasResults (state) {
     return state.list.length > 0
+  },
+  pagesLength (state) {
+    return Math.ceil(state.total / state.search.limit)
+  },
+  page (state) {
+    return state.page
   }
 }
