@@ -1,13 +1,6 @@
 <template>
     <v-container>
-      <v-row class="mt-3">
-        <v-col sm11>
-          <v-text-field @keyup.enter.native="searchAll()" v-model="search.query" label="Search..." hide-details></v-text-field>
-        </v-col>
-        <v-col sm1>
-          <v-btn @click.native="searchAll()" primary>Search</v-btn>
-        </v-col>
-      </v-row>
+      <SearchBar v-model="search.query" @search="searchAll" />
       <v-row v-if="hasChannels">
         <v-col sm12>
           <v-list three-line  >
@@ -17,11 +10,19 @@
 
             <!-- Display Channels -->
             <v-subheader v-if="hasChannels">Channels</v-subheader>
-            <ChannelListItem v-if="hasChannels" v-for="channel in channels.slice(0, 3)" :channel="channel" :key="channel._id" />
+            <ChannelListItem
+              v-if="hasChannels"
+              v-for="channel in channels.slice(0, 3)"
+              :channel="channel"
+              :key="channel._id"/>
             <!-- link to more channel results -->
             <template v-if="hasChannels">
               <v-list-item >
-                <v-list-tile avatar router nuxt :href="{ name: 'channels', query: search }">
+                <v-list-tile
+                  avatar
+                  router
+                  nuxt
+                  :href="{ name: 'channels', query: search }">
                   <v-list-tile-avatar>
                     <v-icon>launch</v-icon>
                   </v-list-tile-avatar>
@@ -29,7 +30,39 @@
                     <v-list-tile-title >
                       See more channels
                     </v-list-tile-title>
-                    <v-list-tile-sub-title>{{ totalChannels }} number of channels</v-list-tile-sub-title>
+                    <v-list-tile-sub-title>
+                      {{ totalChannels }} number of channels
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list-item>
+            </template>
+
+            <!-- Display Streams -->
+            <v-subheader v-if="hasStreams">Streams</v-subheader>
+            <StreamListItem
+              v-if="hasStreams"
+              v-for="stream in streams.slice(0, 3)"
+              :stream="stream"
+              :key="stream._id"/>
+            <!-- link to more stream results -->
+            <template v-if="hasStreams">
+              <v-list-item >
+                <v-list-tile
+                  avatar
+                  router
+                  nuxt
+                  :href="{ name: 'streams', query: search }">
+                  <v-list-tile-avatar>
+                    <v-icon>launch</v-icon>
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title >
+                      See more streams
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title>
+                      {{ totalStreams }} number of streams
+                    </v-list-tile-sub-title>
                   </v-list-tile-content>
                 </v-list-tile>
               </v-list-item>
@@ -59,7 +92,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import SearchBar from '~components/SearchBar'
 import ChannelListItem from '~components/ChannelListItem'
+import StreamListItem from '~components/StreamListItem'
 
 export default {
   async fetch ({ store, query }) {
@@ -75,7 +110,7 @@ export default {
     }
   },
   methods: {
-    async searchAll () {
+    async searchAll (term) {
       if (this.search.hasOwnProperty('query')) {
         await this.$store.dispatch('search', this.search)
         this.$router.push({ query: { ...this.search } })
@@ -88,18 +123,26 @@ export default {
       }
     },
     goToChannelsList () {
-      this.$router.push({ name: 'channels', query: { ...this.search } })
+      this.$router.push({
+        name: 'channels',
+        query: { ...this.search }
+      })
     }
   },
   computed: {
     ...mapGetters({
       channels: 'channel/list',
       hasChannels: 'channel/hasResults',
-      totalChannels: 'channel/total'
+      totalChannels: 'channel/total',
+      streams: 'stream/list',
+      hasStreams: 'stream/hasResults',
+      totalStreams: 'stream/total'
     })
   },
   components: {
-    ChannelListItem
+    SearchBar,
+    ChannelListItem,
+    StreamListItem
   }
 }
 </script>

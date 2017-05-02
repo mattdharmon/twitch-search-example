@@ -1,4 +1,5 @@
 <template>
+  <div>
     <v-list-item :key="channel._id" @click="goToChannel(channel)">
       <v-list-tile avatar :href="channel.url">
         <v-list-tile-avatar>
@@ -10,6 +11,8 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list-item>
+    <v-divider inset/>
+  </div>
 </template>
 
 <script>

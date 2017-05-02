@@ -1,30 +1,30 @@
 <template lang="html">
     <v-container>
-      <SearchBar v-model="search.query" @search="searchAll" />
-      <v-row v-if="hasChannels">
+      <v-row class="mt-5">
+        <v-col sm12 md10 class="text-sm-center">
+          <v-text-field class="ma-0 ml-3" @keyup.enter.native="searchAll" v-model="search.query" label="Search..." hide-details ></v-text-field>
+        </v-col>
+        <v-col sm12 md2>
+          <v-btn class="ml-5" @click.native="searchAll" primary>Search</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-if="hasStreams">
         <v-col sm12>
           <v-list three-line  >
             <v-toolbar class="secondary">
-              <v-toolbar-title>Channel Search Results</v-toolbar-title>
-              <v-pagination
-                :length.number="pagesLength"
-                v-model="currentPage"
-                @input="searchAll"/>
+              <v-toolbar-title>Streams Search Results</v-toolbar-title>
+              <v-pagination :length.number="pagesLength" v-model="currentPage" @input="searchAll"/>
             </v-toolbar>
 
-            <!-- Display Channels -->
-            <ChannelListItem
-              v-if="hasChannels"
-              v-for="channel in channels"
-              :channel="channel"
-              :key="channel.id"/>
+            <!-- Display Streams -->
+            <StreamListItem v-if="hasStreams" v-for="stream in streams" :stream="stream" :key="stream.id" />
           </v-list>
         </v-col>
       </v-row>
       <v-row>
         <v-col sm12>
           <!-- Default display -->
-          <div v-if="!hasChannels">
+          <div v-if="!hasStreams">
             <h1 class="title">
               NUXT
             </h1>
@@ -44,33 +44,30 @@
 <script>
 import { mapGetters } from 'vuex'
 import SearchBar from '~components/SearchBar'
-import ChannelListItem from '~components/ChannelListItem'
+import StreamListItem from '~components/StreamListItem'
 
 export default {
   async fetch ({ store, query }) {
     if (Object.keys(query)) {
-      await store.dispatch('channel/search', query)
+      await store.dispatch('stream/search', query)
     }
   },
   data () {
     return {
       search: {
-        ...this.$store.state.channel.search
+        ...this.$store.state.stream.search
       },
-      currentPage: this.$store.state.channel.page
+      currentPage: this.$store.state.stream.page
     }
   },
   methods: {
     async searchAll () {
-      this.$store.dispatch('channel/setPage', this.currentPage)
-      this.search.offset = this.$store.state.channel.search.offset
+      this.$store.dispatch('stream/setPage', this.currentPage)
+      this.search.offset = this.$store.state.stream.search.offset
 
       if (this.search.query) {
-        await this.$store.dispatch('channel/search', this.search)
-        this.$router.push({
-          name: 'channels',
-          query: { ...this.search }
-        })
+        await this.$store.dispatch('stream/search', this.search)
+        this.$router.push({ name: 'streams', query: { ...this.search } })
       }
 
       if (!this.search.query) {
@@ -82,15 +79,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      channels: 'channel/list',
-      hasChannels: 'channel/hasResults',
-      totalChannels: 'channel/total',
-      pagesLength: 'channel/pagesLength'
+      streams: 'stream/list',
+      hasStreams: 'stream/hasResults',
+      totalStreams: 'stream/total',
+      pagesLength: 'stream/pagesLength'
     })
   },
   components: {
     SearchBar,
-    ChannelListItem
+    StreamListItem
   }
 }
 </script>

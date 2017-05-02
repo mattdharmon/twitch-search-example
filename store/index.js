@@ -9,6 +9,7 @@ export const actions = {
   async search ({ commit, dispatch }, search) {
     commit('search/setSearch', search)
     await dispatch('channel/search', search)
+    await dispatch('stream/search', search)
   },
 
   // Set up a global reset function.
