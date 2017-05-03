@@ -10,6 +10,9 @@ I have chosen [Nuxt.js](https://nuxtjs.org) for this project since it combines [
 # install dependencies
 $ npm install # Or yarn
 
+#Add your Twitch API client-id to the environment.
+export CLIENT_ID=yourClientId
+
 # serve with hot reload at localhost:3000
 $ npm run dev # Or yarn run dev
 ```
