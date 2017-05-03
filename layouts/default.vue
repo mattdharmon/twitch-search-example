@@ -14,7 +14,7 @@
     <v-footer class="secondary">
 
       <div class="text-xs-right">
-        Icons, data, and pictures from Twitch belong to them.
+        Icons, data, and pictures from <a href="https://twitch.tv">Twitch</a> belong to them.
         This is an example site to demonstrate nuxtjs and Twitch's search API.
       </div>
     </v-footer>
