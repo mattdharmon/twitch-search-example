@@ -16,5 +16,6 @@ export const actions = {
   resetSearchResults ({ commit, dispatch }) {
     commit('search/setSearch', { })
     dispatch('channel/clear')
+    dispatch('stream/clear')
   }
 }

@@ -70,29 +70,14 @@
           </v-list>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col sm12>
-          <!-- Default display -->
-          <div v-if="!hasChannels">
-            <h1 class="title">
-              NUXT
-            </h1>
-            <h2 class="subtitle">
-              Universal Vue.js Application
-            </h2>
-            <div class="links">
-              <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-              <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">Github</a>
-            </div>
-          </div>
-        </v-col>
-      </v-row>
+      <NoSearchHolder v-if="!hasChannels && !hasStreams"/>
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import SearchBar from '~components/SearchBar'
+import NoSearchHolder from '~components/NoSearchHolder'
 import ChannelListItem from '~components/ChannelListItem'
 import StreamListItem from '~components/StreamListItem'
 
@@ -100,6 +85,10 @@ export default {
   async fetch ({ store, query }) {
     if (query.hasOwnProperty('query')) {
       await store.dispatch('search', query)
+    }
+
+    if (!query.hasOwnProperty('query')) {
+      await store.dispatch('resetSearchResults')
     }
   },
   data () {
@@ -141,6 +130,7 @@ export default {
   },
   components: {
     SearchBar,
+    NoSearchHolder,
     ChannelListItem,
     StreamListItem
   }
